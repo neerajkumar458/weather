@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Monitoring System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #35424a;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .summary {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .summary p {
+            font-size: 18px;
+            color: #333;
+        }
+        canvas {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Weather Monitoring System</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="summary">
+                <p>Current Temperature: 30°C</p>
+                <p>Humidity: 45%</p>
+                <p>Wind Speed: 10 km/h</p>
+            </div>
+            <canvas id="myChart" width="400" height="200"></canvas>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Weather Monitoring System</p>
+    </footer>
+
+    <script>
+        const labels = [{% for summary in summaries %}'{{ summary[0] }}'{% if not loop.last %}, {% endif %}{% endfor %}];
+        const dataPoints = [{% for summary in summaries %}{{ summary[1] }}{% if not loop.last %}, {% endif %}{% endfor %}];
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const gradientFill = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientFill.addColorStop(0, 'rgba(75, 192, 192, 0.6)');
+        gradientFill.addColorStop(1, 'rgba(75, 192, 192, 0)');
+
+        const myChart = new Chart(ctx, {
+            type: 'line', // Change to 'bar' or other types if desired
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Average Temperature',
+                    data: dataPoints,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: gradientFill, // gradient fill for a polished look
+                    borderWidth: 2,
+                    fill: true, // Fill under the line
+                    pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
